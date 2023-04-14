@@ -22,11 +22,16 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface RegistrationInterface extends ethers.utils.Interface {
   functions: {
+    "accountExists(bytes32)": FunctionFragment;
     "fee()": FunctionFragment;
     "initialize(uint256)": FunctionFragment;
     "register(address,bytes32)": FunctionFragment;
   };
 
+  encodeFunctionData(
+    functionFragment: "accountExists",
+    values: [BytesLike]
+  ): string;
   encodeFunctionData(functionFragment: "fee", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "initialize",
@@ -37,6 +42,10 @@ interface RegistrationInterface extends ethers.utils.Interface {
     values: [string, BytesLike]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "accountExists",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "fee", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "register", data: BytesLike): Result;
@@ -105,6 +114,11 @@ export class Registration extends BaseContract {
   interface: RegistrationInterface;
 
   functions: {
+    accountExists(
+      arg0: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     fee(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     initialize(
@@ -114,10 +128,12 @@ export class Registration extends BaseContract {
 
     register(
       provider: string,
-      uid: BytesLike,
+      account: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
+
+  accountExists(arg0: BytesLike, overrides?: CallOverrides): Promise<boolean>;
 
   fee(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -128,18 +144,20 @@ export class Registration extends BaseContract {
 
   register(
     provider: string,
-    uid: BytesLike,
+    account: BytesLike,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    accountExists(arg0: BytesLike, overrides?: CallOverrides): Promise<boolean>;
+
     fee(overrides?: CallOverrides): Promise<BigNumber>;
 
     initialize(_fee: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     register(
       provider: string,
-      uid: BytesLike,
+      account: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -175,6 +193,11 @@ export class Registration extends BaseContract {
   };
 
   estimateGas: {
+    accountExists(
+      arg0: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     fee(overrides?: CallOverrides): Promise<BigNumber>;
 
     initialize(
@@ -184,12 +207,17 @@ export class Registration extends BaseContract {
 
     register(
       provider: string,
-      uid: BytesLike,
+      account: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    accountExists(
+      arg0: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     fee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     initialize(
@@ -199,7 +227,7 @@ export class Registration extends BaseContract {
 
     register(
       provider: string,
-      uid: BytesLike,
+      account: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
