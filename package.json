@@ -8,7 +8,9 @@
 		"prepare": "yarn build && hardhat typechain",
 		"prepublish": "tsc ./types/**.ts --esModuleInterop true --target es5",
 		"build": "cross-env NODE_ENV=build hardhat compile && cross-env NODE_ENV=build hardhat typechain && yarn prepublish",
-		"deploy": "yarn hardhat deploy-zksync"
+		"deploy": "yarn hardhat deploy-zksync",
+		"verify": "yarn hardhat verify",
+		"verify-status": "yarn hardhat verify-status --network zkMainnet --verification-id"
 	},
 	"devDependencies": {
 		"@openzeppelin/contracts": "^4.8.2",
